@@ -8,8 +8,6 @@ create table Clients(
 	CONSTRAINT FK_SocialStatus FOREIGN KEY (SocialStatus) REFERENCES SocialStatus(ID)
 )
 
-alter table SocialStatus Alter column [ID] [int] NOT NULL
-
 create table SocialStatus(
 	[ID] [int] NOT NULL,
 	[SocialStatus] [varchar] (20) NOT NULL
@@ -47,8 +45,6 @@ CREATE TABLE Cards(
 	[Cash] [money] NULL
 	CONSTRAINT Card_Number_FK FOREIGN KEY (Client_Bank_id) REFERENCES Accounts(Client_Bank_id)
 )
-
---ALTER TABLE Cards ADD Cash MONEY
 
 --Заполняю таблицу данными
 
@@ -103,20 +99,15 @@ INSERT INTO Accounts
 		   (4,2,5, 250),
 		   (5,1,6, 680) 
 
---update Cards SET Cash = 560
---	where Card_Number = 55422177
-
 INSERT INTO Cards
 	values (1, 45231234, 795),
 		   (1, 22113344, 1540),
 		   (2, 43443333, 1230),
 		   (3, 55422177, 560),
 		   (4, NULL, NULL),
-		   (5, NULL, NULL)
-
-INSERT INTO Cards
-	values (4, NULL),
-		   (5, NULL)
+		   (5, NULL, NULL),
+		   (1, 66667777, 500),
+		   (2, 99885544, 400)
 
 
 GO
@@ -147,9 +138,28 @@ where C.Client_Bank_id = Ac.Client_Bank_id and C.Cash <> Ac.Amount
 
 --Вывести кол-во банковских карточек для каждого соц статуса (2 реализации, GROUP BY и подзапросом)
 
-select COUNT()
-from Cards as C, Accounts as Acc, Clients as Cl, SocialStatus as SS
-where Acc.Client_id = Cl.ID and SS.ID = 
+--GROUP BY
+select SS.SocialStatus as [Соц. статус], Count(Cr.Card_Number) as [Кол-во карточек]
+from SocialStatus as SS
+left join Clients as Cl on SS.ID = Cl.SocialStatus
+left join Accounts as Acc on Cl.ID = Acc.Client_id
+left join Cards as Cr on Acc.Client_Bank_id = Cr.Client_Bank_id
+GROUP BY SS.SocialStatus
+
+--select Q1.[Кол-во карточек]
+--from(select Count(Cr.Card_Number) as 'Кол-во карточек'
+--	 from Cards as Cr) as Q1
+
+--подзапрос
+select Q1.[Соц. статус], Q1.[Кол-во карточек]
+from (select SS.SocialStatus as [Соц. статус], Count(Cr.Card_Number) as [Кол-во карточек]
+		from SocialStatus as SS
+		left join Clients as Cl on SS.ID = Cl.SocialStatus
+		left join Accounts as Acc on Cl.ID = Acc.Client_id
+		left join Cards as Cr on Acc.Client_Bank_id = Cr.Client_Bank_id
+		GROUP BY SS.SocialStatus) as Q1
+
+
 
 
 --Написать триггер на таблицы Account/Cards чтобы нельзя была занести значения в поле 
