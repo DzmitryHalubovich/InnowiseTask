@@ -140,8 +140,10 @@ and C.Card_Number IS NOT NULL
 --Показать список банковских аккаунтов у которых баланс не совпадает с суммой баланса по карточкам.
 --В отдельной колонке вывести разницу
 
-select Client_Bank_id
-from Accounts
+select Ac.Client_Bank_id as [Номер аккаунта], Ac.Amount as [Сумма на аккаунте], 
+C.Cash [Сумма на карте], Ac.Amount - C.Cash as [Разница Аккаунт-Карта]
+from Accounts as Ac, Cards as C
+where C.Client_Bank_id = Ac.Client_Bank_id and C.Cash <> Ac.Amount
 
 --Вывести кол-во банковских карточек для каждого соц статуса (2 реализации, GROUP BY и подзапросом)
 
@@ -149,6 +151,11 @@ select COUNT()
 from Cards as C, Accounts as Acc, Clients as Cl, SocialStatus as SS
 where Acc.Client_id = Cl.ID and SS.ID = 
 
+
+--Написать триггер на таблицы Account/Cards чтобы нельзя была занести значения в поле 
+--баланс если это противоречит условиям  (то есть нельзя изменить значение в Account на меньшее, 
+--чем сумма балансов по всем карточкам. И соответственно нельзя изменить баланс карты 
+--если в итоге сумма на картах будет больше чем баланс аккаунта)
 
 
 
