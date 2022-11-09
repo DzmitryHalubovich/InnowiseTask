@@ -44,8 +44,11 @@ CREATE TABLE Accounts(
 CREATE TABLE Cards(
 	[Client_Bank_id] [int] NULL,
 	[Card_Number] [int] NULL,
+	[Cash] [money] NULL
 	CONSTRAINT Card_Number_FK FOREIGN KEY (Client_Bank_id) REFERENCES Accounts(Client_Bank_id)
 )
+
+--ALTER TABLE Cards ADD Cash MONEY
 
 --Заполняю таблицу данными
 
@@ -100,17 +103,23 @@ INSERT INTO Accounts
 		   (4,2,5, 250),
 		   (5,1,6, 680) 
 
+--update Cards SET Cash = 560
+--	where Card_Number = 55422177
+
 INSERT INTO Cards
-	values (1, 45231234),
-		   (1, 22113344),
-		   (2, 43443333),
-		   (3, 55422177),
-		   (4, NULL),
-		   (5, NULL)
+	values (1, 45231234, 795),
+		   (1, 22113344, 1540),
+		   (2, 43443333, 1230),
+		   (3, 55422177, 560),
+		   (4, NULL, NULL),
+		   (5, NULL, NULL)
 
 INSERT INTO Cards
 	values (4, NULL),
 		   (5, NULL)
+
+
+GO
 
 --Список банков у которых есть филиалы в городе Витебск (ID = 4)
 
