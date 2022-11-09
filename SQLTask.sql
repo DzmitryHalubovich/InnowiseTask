@@ -1,4 +1,11 @@
 create database BankSectorDB
+--drop database BankSectorDB
+
+create table SocialStatus(
+	[ID] [int] NOT NULL,
+	[SocialStatus] [varchar] (20) NOT NULL
+	CONSTRAINT PK_ID PRIMARY KEY (ID)
+)
 
 create table Clients(
 	[ID] [int] PRIMARY KEY,
@@ -6,12 +13,6 @@ create table Clients(
 	[Surname] [varchar] (50) NOT NULL,
 	[SocialStatus] [int] NOT NULL
 	CONSTRAINT FK_SocialStatus FOREIGN KEY (SocialStatus) REFERENCES SocialStatus(ID)
-)
-
-create table SocialStatus(
-	[ID] [int] NOT NULL,
-	[SocialStatus] [varchar] (20) NOT NULL
-	CONSTRAINT PK_ID PRIMARY KEY (ID)
 )
 
 create table Banks(
@@ -47,6 +48,12 @@ CREATE TABLE Cards(
 )
 
 --Заполняю таблицу данными
+INSERT INTO SocialStatus
+	values (1, 'Безработный'),
+		   (2, 'Пенсионер'),
+		   (3, 'Инвалид'),
+		   (4, 'Школьник'),
+		   (5, 'Бюджетник')
 
 INSERT INTO Clients
 	values (1, 'Владимир', 'Котляров', 2),
@@ -55,12 +62,6 @@ INSERT INTO Clients
 		   (4, 'Генадий', 'Тищенко', 1),
 		   (5, 'Инокентий', 'Трофимов', 5)
 
-INSERT INTO SocialStatus
-	values (1, 'Безработный'),
-		   (2, 'Пенсионер'),
-		   (3, 'Инвалид'),
-		   (4, 'Школьник'),
-		   (5, 'Бюджетник')
 
 INSERT INTO Cities
 	values (1, 'Минск'),
